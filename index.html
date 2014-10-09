@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+    <title>Gedata API</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+	<link href="css/data.css" rel="stylesheet">	
+	
+	
+</head>
+  
+<body>
+  
+    <script src="js/jquery-2.1.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+  
+    <div class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+			<a class="navbar-brand" href="#">Geodata API</a>
+        </div>
+        <div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="#langeland">Langeland</a></li>
+				<li><a href="#raster">Raster</a></li>
+				<li><a href="#pointcloud">PointCloud</a></li>
+			</ul>
+		</div>
+      </div>
+    </div>
+	
+	<div class="container" >
+		<div class="col-lg-12" id ="langeland">
+			<h1>Langeland</h1>
+			<ul>
+				<li>spatial - returns rows of 3D linestrings representing the cross country skiing tracks</li>
+				<li>inserted - returns the raw points from tracker</li>
+				<li>spatiotemporal - returns one FeatureCollection geojson object. Suitable for Leaflet</li>
+				<li>segmentmap - retursn json-encoded rows of segment mapping for cross country skiing tracks</li>
+			</ul>
+		</div>
+		
+		<div class="col-lg-12" id ="rasters">
+			<h1>Rasters</h1>
+			<ul>
+				<li>datasets</li>
+				<li>dataset/rasterbin</li>
+				<li>dataset/rasterpng</li>
+			</ul>
+		</div>
+		
+		<div class="col-lg-12" id ="pointclouds">
+			<h1>Point Clouds</h1>
+			<ul>
+				<li>datasets</li>
+				<li>dataset/points</li>
+				<li>dataset/tin/</li>
+				
+			</ul>
+		</div>
+	</div>
+	
+
+	
+
+	
+	
+</body>
+</html>
