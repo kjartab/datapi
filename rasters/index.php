@@ -29,7 +29,7 @@ require_once('includes/db.php');
 				
 				$res = '';
 				switch($request[3]) {
-					case 'rasterdata':
+					case 'dtm':
 						
 						
 						$vars['srid'] = default_value($_GET,'srid','4326');
@@ -49,7 +49,7 @@ require_once('includes/db.php');
 							break;
 							
 							case 'xyz':
-								Controller::respond(200,$res,"Content-type:'text/html");
+								Controller::respond(200,$res,"Content-type:'application/octet-stream");
 							break;
 							
 							case 'raw':
