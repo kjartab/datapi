@@ -36,7 +36,8 @@ require_once('includes/db.php');
 						
 						$vars['outline'] = default_value($_GET,'outline','POLYGON((5.552215576171874 61.42760385286822,5.552215576171874 61.5514927834735,5.824127197265624 61.5514927834735,5.824127197265624 61.42760385286822,5.552215576171874 61.42760385286822)) ');
 						
-						$vars['table'] =  default_value($_GET,'dataset','vestlandet32');
+						$vars['table'] =  default_value($_GET,'dataset','dtm.norge33
+');
 						
 						$vars['format'] =  default_value($_GET,'format','xyz');
 						

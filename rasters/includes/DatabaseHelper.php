@@ -36,7 +36,7 @@ Class DatabaseHelper {
 	public function getRasterDataSets() {	
 		$dbresult;
 		if ($this->dbconn) {
-			$dbresult = @pg_query('SELECT ST_AsGeoJson(ST_Transform(ST_Envelope(rast),4236)) from sunnfjordterrain;');
+			$dbresult = @pg_query('SELECT ST_AsGeoJson(ST_Transform(ST_Envelope(rast),4236)) from dtm.norge33;');
 		if ($dbresult === false) {
 				return;
 			}
@@ -47,7 +47,7 @@ Class DatabaseHelper {
 	public function getPngDem($polygon,$table) {	
 		$dbresult;
 		if ($this->dbconn) {
-			$dbresult = @pg_query('SELECT ST_AsGDALRaster((SELECT ST_ReClass(ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$polygon.'\',4236),32632)),true),1,\'200-1600:0-255\',\'32BF\') from sunnfjordterrain WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$polygon.'\',4236)),32632))),\'PNG\')');
+			$dbresult = @pg_query('SELECT ST_AsGDALRaster((SELECT ST_ReClass(ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$polygon.'\',4236),32633)),true),1,\'200-1600:0-255\',\'32BF\') from dtm.norge33 WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$polygon.'\',4236)),32633))),\'PNG\')');
 			
 	if ($dbresult === false) {
 				return 'test';
@@ -70,7 +70,7 @@ Class DatabaseHelper {
 		$dbresult;
 		if ($this->dbconn) {
 				$dbresult = pg_query(
-						'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',4236),32632)),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',4236)),32632)))		
+						'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',4236),32633)),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',4236)),32633)))		
 					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster');
 			}
 		
@@ -100,7 +100,7 @@ Class DatabaseHelper {
 		$dbresult;
 		if ($this->dbconn) {
 				$dbresult = pg_query(
-						'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',4236),32632)),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',4236)),32632)))		
+						'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',4236),32633)),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',4236)),32633)))		
 					SELECT ST_AsGDALRaster(ra,\''.$format.'\') from raster');
 			}
 		
@@ -132,7 +132,7 @@ Class DatabaseHelper {
 		if ($this->dbconn) {
 
 				$dbresult = pg_query(
-					'WITH raster as(SELECT ST_Clip(rast,ST_GeomFromText(\' POLYGON(('.$startE.' '.$startN.','.$startE.' '.($startN+$dimN).','.($startE+$dimE).' '.($startN+$dimN).','.($startE+$dimE).' '.$startN.','.$startE.' '.$startN.'))\',32632),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_GeomFromText( \'POLYGON(('.$startE.' '.$startN.','.$startE.' '.($startN+$dimN).','.($startE+$dimE).' '.($startN+$dimN).','.($startE+$dimE).' '.$startN.','.$startE.' '.$startN.'))\',32632))) 	SELECT ST_AsGDALRaster(ra,\''.$format.'\') from raster');
+					'WITH raster as(SELECT ST_Clip(rast,ST_GeomFromText(\' POLYGON(('.$startE.' '.$startN.','.$startE.' '.($startN+$dimN).','.($startE+$dimE).' '.($startN+$dimN).','.($startE+$dimE).' '.$startN.','.$startE.' '.$startN.'))\',32633),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_GeomFromText( \'POLYGON(('.$startE.' '.$startN.','.$startE.' '.($startN+$dimN).','.($startE+$dimE).' '.($startN+$dimN).','.($startE+$dimE).' '.$startN.','.$startE.' '.$startN.'))\',32633))) 	SELECT ST_AsGDALRaster(ra,\''.$format.'\') from raster');
 
 		}	
 				
