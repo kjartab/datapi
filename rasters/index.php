@@ -14,13 +14,15 @@ require_once('includes/db.php');
 	$request = $requestObj->getRequest();
 	
 	
-	function default_value($list, $id, $default) {
+	function getVariable($list, $id, $default) {
 		return empty($list[$id]) ? $default : $list[$id];
 	}
 
 		
 		$data = $requestObj->getData();
+
 		switch( $requestObj->getMethod() ) {
+
 			case 'get':
 				
 				$request = explode("/", $_SERVER['REQUEST_URI'] );
@@ -29,36 +31,37 @@ require_once('includes/db.php');
 				
 				$res = '';
 				switch($request[3]) {
+
+
 					case 'dtm':
+
 						
+						$vars['srid'] = getVariable($_GET,'srid','4326');
 						
-						$vars['srid'] = default_value($_GET,'srid','4326');
+						$vars['outline'] = getVariable($_GET,'outline','POLYGON((5.552215576171874 61.42760385286822,5.552215576171874 61.5514927834735,5.824127197265624 61.5514927834735,5.824127197265624 61.42760385286822,5.552215576171874 61.42760385286822)) ');
 						
-						$vars['outline'] = default_value($_GET,'outline','POLYGON((5.552215576171874 61.42760385286822,5.552215576171874 61.5514927834735,5.824127197265624 61.5514927834735,5.824127197265624 61.42760385286822,5.552215576171874 61.42760385286822)) ');
+						$vars['table'] =  getVariable($_GET,'dataset','dtm.norge33');
 						
-						$vars['table'] =  default_value($_GET,'dataset','dtm.norge33
-');
-						
-						$vars['format'] =  default_value($_GET,'format','xyz');
+						$vars['format'] =  getVariable($_GET,'format','xyz');
 						
 						$res = $dbHelper->getDEM($vars);	
 						
 						
 						switch($vars['format']) {
 							case 'png':
-								Controller::respond(200,$res,"Content-type: image/png");
+								Controller::respond(200, $res,"Content-type: image/png");
 							break;
 							
 							case 'xyz':
-								Controller::respond(200,$res,"Content-type:'application/octet-stream");
+								Controller::respond(200, $res,"Content-type:'application/octet-stream");
 							break;
 							
 							case 'raw':
-								Controller::respond(200,$res,"Content-type:'application/octet-stream");
+								Controller::respond(200, $res,"Content-type:'application/octet-stream");
 							break;
 							
 							case 'jpeg':
-								Controller::respond(200,$res,"Content-type:'image/jpeg");
+								Controller::respond(200, $res,"Content-type:'image/jpeg");
 							break;
 							
 							default:
@@ -69,80 +72,19 @@ require_once('includes/db.php');
 					
 					break;
 					
-					case 'rasterdataRaw':
-						
-						$vars['srid'] = default_value($_GET,'srid','4236');
-						
-						$vars['outline'] = default_value($_GET,'outline','POLYGON((5.552215576171874 61.42760385286822,5.552215576171874 61.5514927834735,5.824127197265624 61.5514927834735,5.824127197265624 61.42760385286822,5.552215576171874 61.42760385286822)) ');
-						
-						$vars['table'] =  default_value($_GET,'dataset','sunnfjordterrain');
-						
-						$vars['format'] =  default_value($_GET,'format','xyz');
-						
-						$vars['startE'] =  default_value($_GET,'startE','378618');
-						$vars['startN'] =  default_value($_GET,'startN','6834147');
-					
-						$vars['dimE'] =  default_value($_GET,'dimE','5000');
-						$vars['dimN'] =  default_value($_GET,'dimN','-5000');
-						
-						$res = $dbHelper->getBoundsTest($vars);	
-					
-						
-						switch($vars['format']) {
-							case 'png':
-								Controller::respond(200,$res,"Content-type: image/png");
-							break;
-							case 'xyz':
-								echo $res;
-								//Controller::respond(200,$res,"Content-type:'text/html");
-							break;
-							
-							case 'raw':
-								Controller::respond(200,$res,"Content-type:'application/octet-stream");
-							break;
-							case 'usgdem':
-								Controller::respond(200,$res,"Content-type:'text/html");
-							break;
-							case 'tiff':
-								Controller::respond(200,$res,"Content-type:'image/jpeg");
-							break;
-							case 'jpeg':
-								Controller::respond(200,$res,"Content-type:'image/jpeg");
-							break;
-							default:
-							
-							break;
-						}
-						break;
-					
-					case 'test':
-					
-						echo $dbHelper->test();
-					break;
-						
-					
-					break;
-					
-					case 'rasterspng':
-						$res = $dbHelper->getPngDemBin($_GET['outline'],$_GET['table']);
-						
-						
-						header("Content-type: image/png"); 
-						echo $res;
-					
-					break;
-					
-					
-					case 'rasters':
-						
-						$res = $dbHelper->getPngDem($_GET['outline'],$_GET['table']);
-						header("Content-type: image/png"); 
-						echo $res;
-					
-					break;
+
 								
-					case 'rasteroverview':
-						$res = $dbHelper->getRasterDataSets();
+					case 'rastergrid':
+						$res = $dbHelper->getRasterGrid();
+						echo $res;
+					
+					break;
+
+
+
+								
+					case 'rasteroutline':
+						$res = $dbHelper->getRasterOutline();
 						echo $res;
 					
 					break;
