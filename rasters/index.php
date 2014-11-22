@@ -36,11 +36,13 @@ require_once('includes/db.php');
 					case 'dtm':
 
 						
-						$vars['srid'] = getVariable($_GET,'srid','4326');
+						$vars['requestsrid'] = getVariable($_GET,'requestsrid',$REQUEST_SRID);
+
+						$vars['tablesrid'] = getVariable($_GET,'tablesrid',$TABLE_SRID);
 						
 						$vars['outline'] = getVariable($_GET,'outline','POLYGON((5.552215576171874 61.42760385286822,5.552215576171874 61.5514927834735,5.824127197265624 61.5514927834735,5.824127197265624 61.42760385286822,5.552215576171874 61.42760385286822)) ');
 						
-						$vars['table'] =  getVariable($_GET,'dataset','dtm.norge33');
+						$vars['table'] =  getVariable($_GET,'dataset', $DTMTABLE);
 						
 						$vars['format'] =  getVariable($_GET,'format','xyz');
 						
@@ -75,7 +77,13 @@ require_once('includes/db.php');
 
 								
 					case 'rastergrid':
-						$res = $dbHelper->getRasterGrid();
+						$requestSRID = getVariable($_GET,'requestsrid',$REQUEST_SRID);
+						$schema = getVariable($_GET, 'schema', $SCHEMA);
+						$table =  getVariable($_GET,'table', $TABLE);
+						
+
+
+						$res = $dbHelper->getRasterGrid($schema, $table, $requestSRID);
 						echo $res;
 					
 					break;
@@ -84,7 +92,10 @@ require_once('includes/db.php');
 
 								
 					case 'rasteroutline':
-						$res = $dbHelper->getRasterOutline();
+						
+						$vars['requestsrid'] = getVariable($_GET,'requestsrid',$REQUEST_SRID);
+						$vars['tablesrid'] = getVariable($_GET,'tablesrid',$TABLE_SRID);
+						$res = $dbHelper->getRasterOutline($vars);
 						echo $res;
 					
 					break;

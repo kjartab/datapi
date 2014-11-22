@@ -79,7 +79,7 @@ Class DatabaseHelper {
 	public function getGeoJsonTracks() {
 		$dbresult;
 		if ($this->dbconn) {
-			$dbresult = @pg_query('SELECT row_to_json(feature_collection)
+			$query = 'SELECT row_to_json(feature_collection)
 									FROM ( SELECT \'FeatureCollection\' AS type, 
 										array_to_json(array_agg(feature)) As features
 										FROM (	
@@ -88,7 +88,9 @@ Class DatabaseHelper {
 											row_to_json((SELECT seg_id FROM (SELECT sid, segmentorder, segmenttime, length) AS seg_id)) AS properties
 											FROM (SELECT segment,segmenttime, ST_Length(segment) length, s.segmentnumber as segmentorder, s.segment_id as sid FROM prebuild_temporalsegment s) k
 											) AS feature 
-										) AS feature_collection;');
+										) AS feature_collection;';
+
+			$dbresult = @pg_query($query);
 		if ($dbresult === false) {
 				return;
 			}
@@ -182,8 +184,12 @@ Class DatabaseHelper {
 	public function getTrackObjects() {
 		$dbresult;
 		if ($this->dbconn) {
-			$dbresult = pg_query("SELECT row_to_json(trackdata) from (select t.id track_id, name, array_agg(segment_id) segment_ids, array_agg(segment_order) segment_order, array_agg(defines_track) defines_track
-				FROM track_table t join track_segment_table ts on t.id = ts.track_id group by name, t.id) trackdata	");
+			
+			$query = "SELECT row_to_json(trackdata) from (select t.id track_id, name, array_agg(segment_id) segment_ids, array_agg(segment_order) segment_order, array_agg(defines_track) defines_track
+				FROM track_table t join track_segment_table ts on t.id = ts.track_id group by name, t.id) trackdata	";
+			//echo $query;
+//, array_agg(defines_track) defines_track
+			$dbresult = pg_query($query);
 		if ($dbresult === false) {
 				return;
 			}
