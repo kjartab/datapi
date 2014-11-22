@@ -1,11 +1,13 @@
 <?php
 
 $db = array(
-                'connectionString' => 'host={insert} port={insert} dbname={insert} user={insert} password={insert}',
-                'host' => '{insert}',
-                'username' => '{insert}',
-                'password' => '{insert}',
-                'port' => '{insert}'
+        'connectionString' => 'host=localhost port=5432 dbname=postgres user=postgres password=norkart',
+              
         );
+
+$TABLE = 'vestlandet32';
+$SCHEMA = 'public';
+$REQUEST_SRID = '4236';
+$RASTCOL = 'rast';
 
 ?>
