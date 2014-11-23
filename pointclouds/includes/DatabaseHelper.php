@@ -8,25 +8,21 @@ Class DatabaseHelper {
 	private $user;
 	private $password;	
 	private $dbconn;
-	private $dbresult;
+	private $dbArray;
 	
 	
-    public function __construct() {
-		$this->host = 'localhost';
-		$this->port = '5432';
-		$this->dbname = 'langeland';
-		$this->user = 'langeland';
-		$this->password = 'lillehammerol';
+	
+    public function __construct($db) {
+		$this->dbArray = $db;
 	}
 	
 	public function connect() {	
 		if ($this->dbconn == null) {
-			$this->dbconn = pg_connect("host=localhost port=5433 dbname=mbe user=postgres password=kjartan");
+			$this->dbconn = pg_connect($this->dbArray['connectionString']);
 		} else {
 			echo 'connection already established';	
 		}
 	}
-
 	
 	public function runQuery($queryText) {
 		$dbresult;
