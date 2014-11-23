@@ -12,10 +12,6 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 	$request = $requestObj->getRequest();
 
 		
-	function default_value($list, $id, $default) {
-		return empty($list[$id]) ? $default : $list[$id];
-	}
-		
 		$data = $requestObj->getData();
 		switch( $requestObj->getMethod() ) {
 			case 'get':
@@ -28,10 +24,35 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 				
 				// if data -> show overview 	
 				
-				
-				switch($request[3]) {			
+				if (count($request) > 3 ) {
+					
+					switch($request[3]) {
+					
+						// ------------- Handle all geometry queries ------------- 
+						case 'spatial':
+							if (count($request)==5 OR (count($request)==6 AND $request[5] == null)) {	
+	
+	
+	
+	
+	
+								$res = $dbHelper->getTable($request[4]);
+							} else if (count($request)==6 AND is_numeric($request[5])) {
 							
-						case 'overview':
+								$res = $dbHelper->getRecordFromTable($request[4],$request[5]);
+							} else {
+								return Controller::respond(404);
+							}
+							
+							echo $res;
+							
+							break;
+							
+							
+							
+							
+						// ------------- Handle the spatiotemporal queries ------------- 
+						case 'pointclouds':
 							
 							$res = $dbHelper->getPointClouds();
 							
@@ -47,6 +68,7 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 							break;
 							
 						case 'polygons':
+							
 							
 							$res = $dbHelper->getPolygons('helsinki',$_GET['outline']);
 							
@@ -68,10 +90,36 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 							echo $res;
 							break;
 							
-				}
+					}
+				} else {
+					header("Location: /cloudy-dev/data/");
+					die();
+					
+				} 
+				
+				
+				if (!$res) {
+					echo 'error';
+				} 
+				break;
+				
+			case 'post':
+				$dat = $_POST["data"];
+				// Ensure login credentials are correct
+					$dbWriter->connect();
+					$dbWriter->insertTrackingPosition($dat)	;
+					Controller::respond(200);
+			
+				break;
+				
+			case 'put':
+				break;
+				
+			case 'delete':
+				break;
 				
 			default:
-				Controller::respond( 400 );
+				Controller::respond( 405 );
 				break;
 	}
 	
