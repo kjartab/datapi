@@ -100,7 +100,7 @@ Class DatabaseHelper {
 			
 			} 
 			
-			$query = 'WITH selection AS (SELECT ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$') outline) SELECT ST_Clip(rast, selection.outline) from selection, vestlandet32 where ST_Intersects(rast, selection.outline);'
+			$query = 'WITH selection AS (SELECT ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),) outline) SELECT ST_Clip(rast, selection.outline) from selection, vestlandet32 where ST_Intersects(rast, selection.outline)';
 		
 			
 			
@@ -114,16 +114,11 @@ Class DatabaseHelper {
 			if ($tableSrid == $requestSRID) {
 				
 			}
-			$query = 'SELECT ST_Area(ST_Transform(' .$outline. ', ' .$requestSRID. ')');
+			$query = 'SELECT ST_Area(ST_Transform(' .$outline. ', ' .$requestSRID. ')';
 			$resolution = pg_query($query);
 		
 	}
 	
-	public function getRasterHits() {
-		pg_query('');
-		
-		
-	}
 	
 	public function getDEM($getvars) {
 		

@@ -38,11 +38,11 @@ require_once('includes/db.php');
 						
 						$vars['requestsrid'] = getVariable($_GET,'requestsrid',$REQUEST_SRID);
 
-						$vars['tablesrid'] = getVariable($_GET,'tablesrid',$TABLE_SRID);
-						
 						$vars['outline'] = getVariable($_GET,'outline','POLYGON((5.552215576171874 61.42760385286822,5.552215576171874 61.5514927834735,5.824127197265624 61.5514927834735,5.824127197265624 61.42760385286822,5.552215576171874 61.42760385286822)) ');
 						
-						$vars['table'] =  getVariable($_GET,'dataset', $DTMTABLE);
+						$vars['table'] =  getVariable($_GET,'dataset', $TABLE);
+						
+						$vars['schema'] = getVariable($_GET,'schema', $SCHEMA);
 						
 						$vars['format'] =  getVariable($_GET,'format','xyz');
 						
