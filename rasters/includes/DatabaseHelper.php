@@ -63,8 +63,67 @@ Class DatabaseHelper {
 	}
 		
 		
+	public function getSridOfTable($schema, $table, $columnName) {
+			if ($this->dbconn) {
+				return  pg_fetch_row(pg_query('SELECT Find_SRID(\'' .$schema. '\', \'' .$table. '\', \''. $columnName .'\')'))[0];
+			}
+			return 'No db connection';
+		
+	}
 
+	public function getCombinedDem($getvars) {
+		
+		
+		$outline = $getvars['outline'];
+		$table = $getvars['table'];
+		$schema = $getvars['schema'];
+		$format = $getvars['format'];
+		$requestSRID = $getvars['requestsrid'];
+		$RASTCOL = 'rast';
+		$RASTOUTLINE = 'outline';
+		$dbresult;
+		$query;
+		
+		$tableSrid = $this->getSridOfTable($schema, $table, $RASTOUTLINE);
+		if($this->dbconn) {
+			
+			$tableSrid = $this->getSridOfTable($schema, $table, $RASTOUTLINE);
+			if($tableSrid != $requestSRID) {
+					
+					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '))))		
+					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster';
+					
+			} else {
+			
+				$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '),' .$tableSrid. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$tableSrid. ')))		
+				SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster';
+			
+			} 
+			
+			$query = 'WITH selection AS (SELECT ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$') outline) SELECT ST_Clip(rast, selection.outline) from selection, vestlandet32 where ST_Intersects(rast, selection.outline);'
+		
+			
+			
+		}
+	}
 	
+	public function getResolution($schema, $table, $columnName, $outline, $requestSRID) {
+			
+			$tableSrid = getSridOfTable($schema, $table, $columnName);
+			
+			if ($tableSrid == $requestSRID) {
+				
+			}
+			$query = 'SELECT ST_Area(ST_Transform(' .$outline. ', ' .$requestSRID. ')');
+			$resolution = pg_query($query);
+		
+	}
+	
+	public function getRasterHits() {
+		pg_query('');
+		
+		
+	}
 	
 	public function getDEM($getvars) {
 		
@@ -76,14 +135,21 @@ Class DatabaseHelper {
 		$RASTCOL = 'rast';
 		$RASTOUTLINE = 'outline';
 		$dbresult;
+		$query;
+		
 		if ($this->dbconn) {
-				$srid = pg_fetch_row(pg_query('SELECT Find_SRID(\'' .$schema. '\', \'' .$table. '\', \''. $RASTOUTLINE .'\')'))[0];
+				$tableSrid = $this->getSridOfTable($schema, $table, $RASTOUTLINE);
 				
-				if($srid != $requestSRID) {
+				if($tableSrid == $requestSRID) {
 					
-					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '),' .$srid. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$srid. ')))		
+					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '))))		
 					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster';
 					
+				} else {
+				
+					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '),' .$tableSrid. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$tableSrid. ')))		
+					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster';
+				
 				}
 				$dbresult = pg_query($query);
 			}
