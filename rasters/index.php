@@ -46,6 +46,7 @@ require_once('includes/db.php');
 						
 						$vars['format'] =  getVariable($_GET,'format','xyz');
 						
+						$vars['samplingalgorithm'] = getvariable($_GET,'samplingalgorithm', 'Bilinear']);
 						$res = $dbHelper->getDEM($vars);	
 						
 						
