@@ -79,6 +79,7 @@ Class DatabaseHelper {
 		$schema = $getvars['schema'];
 		$format = $getvars['format'];
 		$requestSRID = $getvars['requestsrid'];
+		$samplingAlgorithm = $getvars['samplingalgorithm'];
 		$RASTCOL = 'rast';
 		$RASTOUTLINE = 'outline';
 		$dbresult;
@@ -91,12 +92,12 @@ Class DatabaseHelper {
 			if($tableSrid != $requestSRID) {
 					
 					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '))))		
-					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster';
+					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
 					
 			} else {
 			
 				$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '),' .$tableSrid. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$tableSrid. ')))		
-				SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster';
+				SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
 			
 			} 
 			
@@ -127,6 +128,7 @@ Class DatabaseHelper {
 		$schema = $getvars['schema'];
 		$format = $getvars['format'];
 		$requestSRID = $getvars['requestsrid'];
+		$samplingAlgorithm = $getvars['samplingalgorithm'];
 		$RASTCOL = 'rast';
 		$RASTOUTLINE = 'outline';
 		$dbresult;
@@ -138,12 +140,12 @@ Class DatabaseHelper {
 				if($tableSrid == $requestSRID) {
 					
 					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '))))		
-					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster';
+					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
 					
 				} else {
 				
 					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '),' .$tableSrid. ')),true) ra from ' .$schema. '.' .$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$tableSrid. ')))		
-					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm=Bilinear\',0.125),\''.$format.'\') from raster';
+					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
 				
 				}
 				$dbresult = pg_query($query);
