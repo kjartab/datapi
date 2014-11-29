@@ -44,14 +44,14 @@ Class DatabaseRestricted {
 		$datalist = explode(',',$data);
 		
 		// Latitude WGS84
-		$lon_deg = (double)substr($datalist[0],0,2);
-		$lon_min = (double)substr($datalist[0],2,9)/60;
-		$lon_deg = $lon_deg + $lon_min;
+		$lat_deg = (double)substr($datalist[0],0,2);
+		$lat_min = (double)substr($datalist[0],2,9)/60;
+		$lat_deg = $lat_deg + $lat_min;
 		
 		// Longitude WGS84
-		$lat_deg = (double)substr($datalist[2],0,3);
-		$lat_min = (double)substr($datalist[2],3,9)/60;
-		$lat_deg = $lat_deg + $lat_min;
+		$lon_deg = (double)substr($datalist[2],0,3);
+		$lon_min = (double)substr($datalist[2],3,9)/60;
+		$lon_deg = $lon_deg + $lon_min;
 		
 		// Height in meters - MSL
 		$height = (double)$datalist[6];
