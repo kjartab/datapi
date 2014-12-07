@@ -82,30 +82,35 @@ Class DatabaseHelper {
 		$samplingAlgorithm = $getvars['samplingalgorithm'];
 		$RASTCOL = 'rast';
 		$RASTOUTLINE = 'outline';
+		
+		$WIDTH = 250;
+		$HEIGHT = 250;
+		
 		$dbresult;
 		$query;
 		
 		$tableSrid = $this->getSridOfTable($schema, $table, $RASTOUTLINE);
-		if($this->dbconn) {
-			
-			$tableSrid = $this->getSridOfTable($schema, $table, $RASTOUTLINE);
-			if($tableSrid != $requestSRID) {
-					
-					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '))))		
-					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
-					
-			} else {
-			
-				$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '),' .$tableSrid. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$tableSrid. ')))		
-				SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
-			
-			} 
-			
-			$query = 'WITH selection AS (SELECT ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),) outline) SELECT ST_Clip(rast, selection.outline) from selection, vestlandet32 where ST_Intersects(rast, selection.outline)';
 		
-			
-			
-		}
+		if($tableSrid != $requestSRID) {
+				
+				$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '))))		
+				SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
+				
+		} else {
+		
+			$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '),' .$tableSrid. ')),true) ra from '.$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$tableSrid. ')))		
+			SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
+		
+		} 
+		
+		$query = 'WITH rastergroup AS (WITH selection AS 
+					(SELECT ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),) outline) 
+						SELECT ST_Clip(rast, selection.outline) rasters from selection, ' .$table. ' WHERE ST_Intersects(' .$RASTCOL. ', selection.outline))
+						
+						SELECT ST_ASGDALRASTER(ST_ReSample(ST_Union(rastergroup.raster),' .$WIDTH. ',' .$HEIGHT. ',0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\');';
+						
+						echo $query;
+	
 	}
 	
 	public function getResolution($schema, $table, $columnName, $outline, $requestSRID) {
@@ -131,6 +136,20 @@ Class DatabaseHelper {
 		$samplingAlgorithm = $getvars['samplingalgorithm'];
 		$RASTCOL = 'rast';
 		$RASTOUTLINE = 'outline';
+		
+		
+		$WIDTH = 250;
+		$HEIGHT = 250;
+		
+		$query = 'WITH rastergroup AS (WITH selection AS 
+					(SELECT ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),) outline) 
+						SELECT ST_Clip(rast, selection.outline) rasters from selection, ' .$table. ' WHERE ST_Intersects(' .$RASTCOL. ', selection.outline))
+						
+						SELECT ST_ASGDALRASTER(ST_ReSample(ST_Union(rastergroup.raster),' .$WIDTH. ',' .$HEIGHT. ',0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\');';
+						
+						echo $query;
+						
+						
 		$dbresult;
 		$query;
 		
