@@ -183,7 +183,7 @@ Class DatabaseHelper {
 				
 			}
 			echo $query;
-			pg_query($query);
+			$dbresult = pg_query($query);
 			
 		if ($dbresult === false) {
 				return;
