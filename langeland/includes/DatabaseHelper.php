@@ -182,7 +182,7 @@ Class DatabaseHelper {
 				$query = 'SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.';';
 				
 			}
-			echo $query;
+			
 			$dbresult = pg_query($query);
 			
 		if ($dbresult === false) {
