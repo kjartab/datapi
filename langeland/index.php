@@ -97,6 +97,20 @@ require_once('includes/db.php');
 							
 							echo $res;
 							break;
+							
+						case 'rawdatahours': 
+							
+							$table = getVariable($_GET,'table', 'rawpositiondata');
+							$hours =  getVariable($_GET,'hours', 24);
+							$limit = getVariable($_GET, 'limit', 100);
+							$limit = getVariable($_GET, 'order', 'desc');
+							
+							$res = $dbHelper->getRawDataHours($table, $limit, $order, $hours);
+							
+							echo $res;
+							
+							
+							break;
 						
 						case 'segments32632':
 
@@ -149,5 +163,11 @@ require_once('includes/db.php');
 				Controller::respond( 405 );
 				break;
 	}
+	
+	
+	function getVariable($list, $id, $default) {
+		return empty($list[$id]) ? $default : $list[$id];
+	}
+
 	
 	exit;

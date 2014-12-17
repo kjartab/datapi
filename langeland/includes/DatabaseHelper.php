@@ -156,6 +156,23 @@ Class DatabaseHelper {
 	}
 
 	
+	public function getRawDataHours($table, $limit, $order, $hours) {
+		$dbresult;
+		if ($this->dbconn) {
+			if (!$limit) {
+				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > now() - interval \'' .$hours. 'hours\' order by insertedtime '.$order.' LIMIT '.$limit.'; ');
+			} else {
+				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > now() - interval \'' .$hours. 'hours\' order by insertedtime '.$order.';');
+			}
+			
+		if ($dbresult === false) {
+				return;
+			}
+		}
+		return $this->transformResult($dbresult);
+	}
+	
+	
 	public function getInsertedPoints($numtracks, $order) {
 		$dbresult;
 		if ($this->dbconn) {
