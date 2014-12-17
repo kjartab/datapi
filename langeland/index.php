@@ -123,10 +123,6 @@ require_once('includes/db.php');
 							$res = $dbHelper->getRawDataOnInterval($table, $limit, $order, $startTime, $endTime);
 							break;
 						
-						case 'inputCountHours': 
-							
-							select count(*) from rawpositiondata where insertedtime > now() - interval '24 hours';
-						
 						break;
 						
 						case 'segments32632':
