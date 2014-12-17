@@ -177,10 +177,13 @@ Class DatabaseHelper {
 		$dbresult;
 		if ($this->dbconn) {
 			if ($limit > 0) {
-				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.' LIMIT '.$limit.'; ');
+				$query = 'SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.' LIMIT '.$limit.';'; 
 			} else {
-				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.';');
+				$query = 'SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.';';
+				
 			}
+			echo $query;
+			pg_query($query);
 			
 		if ($dbresult === false) {
 				return;
