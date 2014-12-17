@@ -121,6 +121,7 @@ require_once('includes/db.php');
 							$order = getVariable($_GET, 'order', 'desc');
 							
 							$res = $dbHelper->getRawDataOnInterval($table, $limit, $order, $startTime, $endTime);
+							echo $res;
 							break;
 						
 						break;
