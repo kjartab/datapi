@@ -116,7 +116,7 @@ require_once('includes/db.php');
 						
 							$table = getVariable($_GET,'table', 'rawpositiondata');
 							$startTime =  getVariable($_GET,'starttime', '2014-11-13 00:00:00');
-							$endtTime =  getVariable($_GET,'endtime', '2014-11-12 00:00:00');
+							$endTime =  getVariable($_GET,'endtime', '2014-11-12 00:00:00');
 							$limit = getVariable($_GET, 'limit', 100);
 							$order = getVariable($_GET, 'order', 'desc');
 							
