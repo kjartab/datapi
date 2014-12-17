@@ -120,7 +120,7 @@ require_once('includes/db.php');
 							$limit = getVariable($_GET, 'limit', 100);
 							$order = getVariable($_GET, 'order', 'desc');
 							
-							$res = $dbHelper->getRawDataOnInterval($table, $limit, $order, $startTime, $endTime)
+							$res = $dbHelper->getRawDataOnInterval($table, $limit, $order, $startTime, $endTime);
 							break;
 						
 						case 'inputCountHours': 
