@@ -111,6 +111,23 @@ require_once('includes/db.php');
 							
 							
 							break;
+							
+						case 'rawdataoninterval':
+						
+							$table = getVariable($_GET,'table', 'rawpositiondata');
+							$startTime =  getVariable($_GET,'starttime', '2014-11-13 00:00:00');
+							$endtTime =  getVariable($_GET,'endtime', '2014-11-12 00:00:00');
+							$limit = getVariable($_GET, 'limit', 100);
+							$order = getVariable($_GET, 'order', 'desc');
+							
+							$res = $dbHelper->getRawDataOnInterval($table, $limit, $order, $startTime, $endTime)
+							break;
+						
+						case 'inputCountHours': 
+							
+							select count(*) from rawpositiondata where insertedtime > now() - interval '24 hours';
+						
+						break;
 						
 						case 'segments32632':
 

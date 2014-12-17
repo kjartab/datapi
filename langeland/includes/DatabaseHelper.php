@@ -177,9 +177,9 @@ Class DatabaseHelper {
 		$dbresult;
 		if ($this->dbconn) {
 			if ($limit > 0) {
-				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > \'' .$startTime. '\' AND insertedtime < \'' .$endTime. '\' order by insertedtime '.$order.' LIMIT '.$limit.'; ');
+				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.' LIMIT '.$limit.'; ');
 			} else {
-				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > \'' .$startTime. '\' AND insertedtime < \'' .$endTime. '\' order by insertedtime '.$order.';');
+				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.';');
 			}
 			
 		if ($dbresult === false) {
@@ -189,6 +189,10 @@ Class DatabaseHelper {
 		return $this->transformResult($dbresult);
 	}
 	
+	
+	public function getRawDataCountHours() {
+	
+	}
 	
 
 	public function getTrackSegments() {
