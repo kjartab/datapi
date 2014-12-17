@@ -159,7 +159,7 @@ Class DatabaseHelper {
 	public function getRawDataHours($table, $limit, $order, $hours) {
 		$dbresult;
 		if ($this->dbconn) {
-			if (!$limit) {
+			if ($limit > 0) {
 				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > now() - interval \'' .$hours. 'hours\' order by insertedtime '.$order.' LIMIT '.$limit.'; ');
 			} else {
 				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > now() - interval \'' .$hours. 'hours\' order by insertedtime '.$order.';');
