@@ -103,7 +103,7 @@ require_once('includes/db.php');
 							$table = getVariable($_GET,'table', 'rawpositiondata');
 							$hours =  getVariable($_GET,'hours', 24);
 							$limit = getVariable($_GET, 'limit', 100);
-							$limit = getVariable($_GET, 'order', 'desc');
+							$order = getVariable($_GET, 'order', 'desc');
 							
 							$res = $dbHelper->getRawDataHours($table, $limit, $order, $hours);
 							
