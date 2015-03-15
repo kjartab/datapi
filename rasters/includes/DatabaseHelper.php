@@ -109,7 +109,7 @@ Class DatabaseHelper {
 						
 						SELECT ST_ASGDALRASTER(ST_ReSample(ST_Union(rastergroup.raster),' .$WIDTH. ',' .$HEIGHT. ',0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\');';
 						
-						echo $query;
+						
 	
 	}
 	
