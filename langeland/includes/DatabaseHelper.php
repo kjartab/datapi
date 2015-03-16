@@ -156,16 +156,42 @@ Class DatabaseHelper {
 	}
 
 	
-	public function getInsertedPoints($numtracks, $order) {
+	public function getRawDataHours($table, $limit, $order, $hours) {
 		$dbresult;
 		if ($this->dbconn) {
-			$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, EXTRACT(EPOCH FROM now()-insertedtime) FROM testtracking order by insertedtime '.$order.' LIMIT '.$numtracks.'; ');
+			if ($limit > 0) {
+				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > now() - interval \'' .$hours. 'hours\' order by insertedtime '.$order.' LIMIT '.$limit.'; ');
+			} else {
+				$dbresult = @pg_query('SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > now() - interval \'' .$hours. 'hours\' order by insertedtime '.$order.';');
+			}
+			
 		if ($dbresult === false) {
 				return;
 			}
 		}
 		return $this->transformResult($dbresult);
 	}
+	
+	
+	public function getRawDataOnInterval($table, $limit, $order, $startTime, $endTime) {
+		$dbresult;
+		if ($this->dbconn) {
+			if ($limit > 0) {
+				$query = 'SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.' LIMIT '.$limit.';'; 
+			} else {
+				$query = 'SELECT id, ST_AsGeoJson(position), insertedtime, positiontime FROM ' .$table. ' WHERE insertedtime > TIMESTAMP \'' .$startTime. '\' AND insertedtime < TIMESTAMP \'' .$endTime. '\' order by insertedtime '.$order.';';
+				
+			}
+			
+			$dbresult = pg_query($query);
+			
+		if ($dbresult === false) {
+				return;
+			}
+		}
+		return $this->transformResult($dbresult);
+	}
+	
 	
 
 	public function getTrackSegments() {
