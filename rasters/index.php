@@ -100,7 +100,7 @@ require_once('includes/db.php');
 						
 
 
-						$res = $dbHelper->getRasterGridFeatureCollection($schema, $table, $requestSRID);
+						$res = $dbHelper->getRasterGrid($schema, $table, $requestSRID);
                         Controller::respond(200, $res, 'application/json');
 					
                     case 'cover':
