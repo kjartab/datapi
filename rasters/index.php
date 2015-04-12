@@ -13,11 +13,9 @@ require_once('includes/db.php');
 	$dbWriter = new DatabaseRestricted($db);
 	$request = $requestObj->getRequest();
 	
-	
 	function getVariable($list, $id, $default) {
 		return empty($list[$id]) ? $default : $list[$id];
 	}
-
 		
 		$data = $requestObj->getData();
 
@@ -102,9 +100,19 @@ require_once('includes/db.php');
 						
 
 
-						$res = $dbHelper->getRasterGrid($schema, $table, $requestSRID);
-						echo $res;
+						$res = $dbHelper->getRasterGridFeatureCollection($schema, $table, $requestSRID);
+                        Controller::respond(200, $res, 'application/json');
 					
+                    case 'cover':
+						$requestSRID = getVariable($_GET,'requestsrid',$REQUEST_SRID);
+						$schema = getVariable($_GET, 'schema', $SCHEMA);
+						$table =  getVariable($_GET,'table', $TABLE);
+						
+						$res = $dbHelper->getRasterGrid($schema, $table, $requestSRID);
+                        
+                        Controller::respond(200,$res, 'application/json');
+                        break;
+                    
 					break;
 
 

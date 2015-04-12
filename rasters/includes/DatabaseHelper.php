@@ -53,7 +53,7 @@ Class DatabaseHelper {
 		$dbresult;
 		if ($this->dbconn) {
 				$query = 'SELECT ST_AsGeoJson(ST_Transform(outline,' .$srid. ')) from  '. $schema .'.'. $table. ';';
-
+                
 			$dbresult = pg_query($query);
 		if ($dbresult === false) {
 				return;
@@ -61,6 +61,48 @@ Class DatabaseHelper {
 		}
 		return $this->transformResult($dbresult);
 	}
+    
+    
+    public function getRasterGridFeatureCollection($schema, $table, $srid) {
+        $dbresult;
+        
+		if ($this->dbconn) {
+				$query = 'SELECT ST_AsGeoJson(ST_Transform(outline,' .$srid. ')) from  '. $schema .'.'. $table. ';';
+                
+			$dbresult = pg_query($query);
+		if ($dbresult === false) {
+				return;
+			}
+		}
+        
+		return $this->toFeatureCollection($dbresult);
+        
+    }
+    
+    public function toFeatureCollection($dbresult) {
+         
+        $res = '{ "type": "FeatureCollection", 
+            "features": [';
+        
+        $count = 0;
+                
+		while ($row = pg_fetch_row($dbresult)) {
+			if ($count != 0) {
+                $res = $res . ',';
+            }
+            $res = $res . '{ "type": "Feature", "geometry": ';
+            
+            $res = $res . $row[0];
+            
+            $res = $res . '}';
+            
+            $count += 1;
+		}
+        
+        $res = $res . ' ] }';
+        
+		return $res;
+    }
 		
 		
 	public function getSridOfTable($schema, $table, $columnName) {
