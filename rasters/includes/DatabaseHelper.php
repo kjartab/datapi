@@ -151,7 +151,7 @@ Class DatabaseHelper {
 						
 						SELECT ST_ASGDALRASTER(ST_ReSample(ST_Union(rastergroup.raster),' .$WIDTH. ',' .$HEIGHT. ',0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\');';
 						
-						echo $query;
+						
 	
 	}
 	
@@ -189,7 +189,7 @@ Class DatabaseHelper {
 						
 						SELECT ST_ASGDALRASTER(ST_ReSample(ST_Union(rastergroup.raster),' .$WIDTH. ',' .$HEIGHT. ',0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\');';
 						
-						echo $query;
+						
 						
 						
 		$dbresult;
@@ -206,7 +206,7 @@ Class DatabaseHelper {
 				} else {
 				
 					$query = 'WITH raster as(SELECT ST_Clip(rast,ST_Envelope(ST_Transform(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. '),' .$tableSrid. ')),true) ra from ' .$schema. '.' .$table.' WHERE ST_Intersects(rast,ST_Transform(ST_Envelope(ST_GeomFromText(\''.$outline.'\',' .$requestSRID. ')),' .$tableSrid. ')))		
-					SELECT ST_AsGDALRaster(ST_ReSample(ra,250,250,0,0,0,0,\'algorithm='.$samplingAlgorithm.'\',0.125),\''.$format.'\') from raster';
+					SELECT ST_AsGDALRaster(ra,\''.$format.'\') from raster';
 				
 				}
 				$dbresult = pg_query($query);

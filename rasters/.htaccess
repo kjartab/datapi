@@ -2,4 +2,6 @@ RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule .* index.php/$0 [L]
 
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Headers "Origin, X-Requested-With, Content-Type, Accept"
 ErrorDocument 404 /langeland-dev/resources/404error.html
