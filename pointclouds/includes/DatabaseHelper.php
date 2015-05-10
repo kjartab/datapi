@@ -82,6 +82,21 @@ Class DatabaseHelper {
 		}
 		return $this->transformResult($dbresult);
     }
+    
+    public function getPatchesBbox($schema, $table, $bbox) {
+        $dbresult;
+		if ($this->dbconn) {
+            $sql = 'SELECT paid, ST_AsGeoJson(ST_Transform(outline,4326)), numpoints FROM ' . $schema . '.' .  $table . '_overview WHERE ST_Intersects(outline,ST_Transform(ST_SetSRID(ST_GeomFromText(\'' .$bbox. '\'),4326),25832)) limit 100
+            ; ';
+			//&//echo $sql;
+            $dbresult = pg_query($sql);
+		if ($dbresult === false) {
+            
+				return;
+			}
+		}
+		return $this->transformResult($dbresult);
+    }
 	
 	public function gettest() {
 		$dbresult;

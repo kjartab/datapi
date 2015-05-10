@@ -2,6 +2,7 @@
 require_once('includes/api.lib.php');
 require_once('includes/DatabaseHelper.php');
 require_once('includes/DatabaseRestricted.php');
+require_once('includes/db.php');
 ini_set("memory_limit","2048M");
 ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 
@@ -57,8 +58,19 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
                             
                         case 'patches':
                         
+                            
+							$res = $dbHelper->getPatches($SCHEMA, $TABLE);
+							
+							echo $res;
+                            break;
+                            
+                            
+                        case 'patchesbbox':
                         
-							$res = $dbHelper->getPatches('public', 'laserdata');
+                            //echo 'test';
+                            //echo $data['outline'];
+                           // echo 'test';
+                           $res = $dbHelper->getPatchesBbox($SCHEMA, $TABLE, $data['outline']);
 							
 							echo $res;
                             break;
