@@ -21,7 +21,7 @@ Class DatabaseHelper {
 	
 	public function connect() {	
 		if ($this->dbconn == null) {
-			$this->dbconn = pg_connect("host=localhost port=5433 dbname=mbe user=postgres password=kjartan");
+			$this->dbconn = pg_connect("host=localhost port=5432 dbname=melhus user=postgres password=postgres");
 		} else {
 			echo 'connection already established';	
 		}
@@ -60,13 +60,28 @@ Class DatabaseHelper {
 	public function getPointClouds() {
 		$dbresult;
 		if ($this->dbconn) {
-			$dbresult = pg_query("SELECT * FROM pointmetadata");
+            
+			$dbresult = pg_query("SELECT * FROM pcmetadata2");
 		if ($dbresult === false) {
+            
 				return;
 			}
 		}
 		return $this->transformResult($dbresult);
 	}
+    
+    public function getPatches($schema, $table) {
+        $dbresult;
+		if ($this->dbconn) {
+            
+			$dbresult = pg_query("SELECT  paid, ST_AsGeoJson(ST_Transform(outline,4326)), numpoints FROM " . $schema . '.' .  $table . '_overview');
+		if ($dbresult === false) {
+            
+				return;
+			}
+		}
+		return $this->transformResult($dbresult);
+    }
 	
 	public function gettest() {
 		$dbresult;
@@ -113,6 +128,23 @@ Class DatabaseHelper {
 		return $this->transformResult($dbresult);
 	}
 	
+    
+    	
+	public function getPointss($table,$bpolygon) {
+		$dbresult;
+		if ($this->dbconn) {	
+			
+			$dbresult = pg_query("WITH points as (WITH patches as (SELECT array_agg(paids) paids FROM ".$table."_overview WHERE ST_Intersects(outline,ST_Transform(ST_GeomFromText('" .$bpolygon. "',4326),3067)))
+							SELECT PC_Explode(pa) pt from ".$table." pdata, patches where pdata.id = ANY(paids))
+							
+							SELECT 1,ST_X(pt::geometry),ST_Y(pt::geometry),ST_Z(pt::geometry),65535,65535,65535,PC_Get(pt,'Intensity'),PC_Get(pt,'Classification')  FROM points;"
+							);
+		if ($dbresult === false) {
+				return;
+			}
+		}
+		return $this->transformResult($dbresult);
+	}
 	
 	
 	public function getPolygons($table,$bpolygon) {

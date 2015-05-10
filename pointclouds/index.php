@@ -17,9 +17,8 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 			case 'get':
 				
 				$request = explode("/", $_SERVER['REQUEST_URI'] );
-				
 				$dbHelper->connect();
-				
+                
 				$res = '';
 				
 				// if data -> show overview 	
@@ -31,10 +30,6 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 						// ------------- Handle all geometry queries ------------- 
 						case 'spatial':
 							if (count($request)==5 OR (count($request)==6 AND $request[5] == null)) {	
-	
-	
-	
-	
 	
 								$res = $dbHelper->getTable($request[4]);
 							} else if (count($request)==6 AND is_numeric($request[5])) {
@@ -50,8 +45,7 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 							
 							
 							
-							
-						// ------------- Handle the spatiotemporal queries ------------- 
+                        
 						case 'pointclouds':
 							
 							$res = $dbHelper->getPointClouds();
@@ -59,6 +53,16 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 							echo $res;
 							break;
 							
+                            
+                            
+                        case 'patches':
+                        
+                        
+							$res = $dbHelper->getPatches('public', 'laserdata');
+							
+							echo $res;
+                            break;
+                            
 						case 'points':
 							
 							
