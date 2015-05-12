@@ -86,7 +86,7 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
                         case 'pcpoints':
                             
 							$res = $dbHelper->getPcPoints('public', 'laserdata',$_GET['outline']);
-							
+							echo $res;
                         break;
                         
                         

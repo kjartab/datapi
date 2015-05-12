@@ -123,18 +123,11 @@ Class DatabaseHelper {
 		$dbresult = pg_query($sql);
                     
             
-        if (!$dbresult) {
-          echo "An error occured.\n";
-          exit; 	
-        }
-
-        $data = array();
-        $first = true;
-        while ($row = pg_fetch_row($dbresult)) {
-            $data[] = $row;
-        }
-	
-        return json_encode($data);
+		if ($dbresult === false) {
+				return;
+			}
+		}
+		return $this->transformResult($dbresult);
     }
 	
 	public function getPointsXYZ($table,$bpolygon) {
