@@ -18,7 +18,7 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 			case 'get':
 				
 				$request = explode("/", $_SERVER['REQUEST_URI'] );
-				$dbHelper->connect();
+				$dbHelper->connect($dbstring);
                 
 				$res = '';
 				
@@ -82,7 +82,13 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 							
 							echo $res;
 							break;
+                        case 'pcpoints':
+                            
+							$res = $dbHelper->getPcPoints('public', 'laserdata',$_GET['outline']);
 							
+                        break;
+                        
+                        
 						case 'polygons':
 							
 							

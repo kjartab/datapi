@@ -19,9 +19,9 @@ Class DatabaseHelper {
 		$this->password = 'lillehammerol';
 	}
 	
-	public function connect() {	
+	public function connect($dbstring) {	
 		if ($this->dbconn == null) {
-			$this->dbconn = pg_connect("host=localhost port=5432 dbname=melhus user=postgres password=postgres");
+			$this->dbconn = pg_connect($dbstring);
 		} else {
 			echo 'connection already established';	
 		}
@@ -108,6 +108,24 @@ Class DatabaseHelper {
 		}
 		return $this->transformResult($dbresult);
 	}
+    
+    
+    public function getPcPoints($schema, $table, $outline){
+        $sql = "WITH pts AS (with pcs as (
+					SELECT id ids FROM laserdata where PC_Intersects(pa, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832))
+				)
+				SELECT PC_explode(pa) pt from laserdata, pcs where id=pcs.ids
+			)
+			SELECT 1, ST_X(pt::geometry) x, ST_Y(pt::geometry) y, ST_Z(pt::geometry) z, 65536 , 65536 , 65536, 1, 1 FROM pts where  ST_Intersects(pt::geometry, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832));";
+            
+		$result = pg_query($dbconn, $sql);
+            
+		if ($dbresult === false) {
+				return;
+			}
+		
+		return $this->transformResult($dbresult);
+    }
 	
 	public function getPointsXYZ($table,$bpolygon) {
 		$dbresult;
