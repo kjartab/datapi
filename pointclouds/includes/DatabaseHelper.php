@@ -111,14 +111,16 @@ Class DatabaseHelper {
     
     
     public function getPcPoints($schema, $table, $outline){
-        $sql = "WITH pts AS (with pcs as (
-					SELECT id ids FROM laserdata where PC_Intersects(pa, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832))
-				)
-				SELECT PC_explode(pa) pt from laserdata, pcs where id=pcs.ids
-			)
-			SELECT 1, ST_X(pt::geometry) x, ST_Y(pt::geometry) y, ST_Z(pt::geometry) z, 65536 , 65536 , 65536, 1, 1 FROM pts where  ST_Intersects(pt::geometry, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832));";
-            
-		$result = pg_query($dbconn, $sql);
+        $sql = 
+$sql =  "WITH pts AS (with pcs as (
+                                        SELECT array_agg(paid) ids FROM denmark_laser_overview where ST_Intersects(outline, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832))
+                                )
+                                SELECT PC_explode(pa) pt from denmark_laser, pcs where id = ANY(pcs.ids)
+                        )
+                        SELECT 1, ST_X(pt::geometry) x, ST_Y(pt::geometry) y, ST_Z(pt::geometry) z, 65536 , 65536 , 65536, 1, 1 FROM pts where  ST_Intersects(pt::geometry, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832));";
+        //echo $sql;
+
+		$dbresult = pg_query($dbconn, $sql);
             
 		if ($dbresult === false) {
 				return;
