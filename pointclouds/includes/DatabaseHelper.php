@@ -120,7 +120,7 @@ Class DatabaseHelper {
         SELECT 1, ST_X(pt::geometry) x, ST_Y(pt::geometry) y, ST_Z(pt::geometry) z, 65536 , 65536 , 65536, 1, 1 FROM pts where  ST_Intersects(pt::geometry, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832));";
         //echo $sql;
 
-		$dbresult = pg_query($dbconn, $sql);
+		$dbresult = pg_query($sql);
                     
             
         if (!$dbresult) {
