@@ -20,6 +20,7 @@ ini_set('max_execution_time', 300); //300 seconds = 5 minutes
 				$request = explode("/", $_SERVER['REQUEST_URI'] );
 				$dbHelper->connect($dbstring);
                 
+                
 				$res = '';
 				
 				// if data -> show overview 	
