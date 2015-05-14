@@ -117,7 +117,7 @@ Class DatabaseHelper {
             )
         SELECT PC_explode(pa) pt from denmark_laser, pcs where id = ANY(pcs.ids)
             )
-        SELECT id,ST_X(pt::geometry) x, ST_Y(pt::geometry) y, ST_Z(pt::geometry) z, PC_Get(pt,'Classification'), PC_Get(pt,'Intensity') FROM pts where  ST_Intersects(pt::geometry, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832));";
+        SELECT ST_X(pt::geometry) x, ST_Y(pt::geometry) y, ST_Z(pt::geometry) z, PC_Get(pt,'Classification'), PC_Get(pt,'Intensity') FROM pts where  ST_Intersects(pt::geometry, ST_SetSRID(ST_Transform(ST_SetSRID(ST_GeomFromText('" .$outline. "'),4326),25832),25832));";
         //echo $sql;
 
 		$dbresult = pg_query($sql);
