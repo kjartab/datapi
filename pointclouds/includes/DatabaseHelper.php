@@ -126,7 +126,7 @@ Class DatabaseHelper {
 		if ($dbresult === false) {
 				return;
 			}
-		}
+		
 		return $this->transformResult($dbresult);
     }
 	
